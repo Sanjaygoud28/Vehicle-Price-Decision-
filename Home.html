@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car-Worth | Vehicle Price Prediction</title>
+  <link rel="stylesheet" href="Home.css" />
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+
+  <!-- NAVBAR -->
+  <div class="nav-wrapper">
+    <div class="logo">Car-Worth</div>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#features2">Features</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+      <a href="#started" class="nav-btn">Evaluate</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-text">
+      <span class="badge">Explainable Pricing Engine</span>
+      <h1>The Smart Way to Value Your Vehicle</h1>
+      <p>
+        Know your car’s real market value with transparent,
+        rule-based logic. No black box. No guesswork.
+      </p>
+      <div class="hero-actions">
+        <a href="#started">
+          <button class="primary-btn">Evaluate Vehicle Price</button>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="car-card">
+        <img
+          src="C:\Users\SANJAY\OneDrive\Desktop\Dom\vehicle-pricing\8151a6d3941bd056b26ee8ee40b2b99b.jpg"
+          alt="Vehicle"
+        />
+      </div>
+    </div>
+  </section>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main>
+
+  <!-- FEATURES -->
+  <section class="features" id="features2">
+    <h2>Why Choose Car-Worth?</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Instant Price Evaluation</h3>
+        <p>Get accurate vehicle pricing in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Decision Breakdown</h3>
+        <p>Every price change is fully explained.</p>
+      </div>
+      <div class="feature-card">
+        <h3>What-If Analysis</h3>
+        <p>Change inputs and see live impact.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Saved Evaluations</h3>
+        <p>Access previous results anytime.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="services">
+    <div class="how-text">
+      <span class="trust-badge">Transparent Pricing</span>
+      <h2>How We Calculate Your Price</h2>
+      <ul>
+        <li>No black box pricing</li>
+        <li>Real resale & insurance logic</li>
+        <li>Market-aligned rules</li>
+        <li>Explainable decisions</li>
+      </ul>
+    </div>
+
+    <div class="price-rules">
+      <h4>Price Adjustments</h4>
+      <div class="rule">🚗 KM Driven <span>- ₹50,000</span></div>
+      <div class="rule positive">🏷 Brand Trust <span>+4%</span></div>
+      <div class="rule">⚠ Accident <span>- ₹1,00,000</span></div>
+    </div>
+  </section>
+
+  <!-- DEMO / APP -->
+  <section class="demo" id="started">
+    <h2>Try a Live Evaluation</h2>
+
+    <div class="demo-container">
+
+      <!-- FORM -->
+      <div class="demo-form">
+
+        <label>
+          Brand
+          <select id="brand">
+            <option value="">Select brand</option>
+            <option value="maruti">Maruti</option>
+            <option value="hyundai">Hyundai</option>
+            <option value="tata">Tata</option>
+            <option value="mahindra">Mahindra</option>
+          </select>
+        </label>
+
+        <label>
+          Model
+          <select id="model">
+            <option value="">Select model</option>
+            <option value="swift">Swift</option>
+            <option value="i20">i20</option>
+            <option value="nexon">Nexon</option>
+            <option value="creta">Creta</option>
+          </select>
+        </label>
+
+        <label>
+          Vehicle Age (years)
+          <input type="number" id="age" placeholder="Enter age" />
+        </label>
+
+        <label>
+          KM Driven
+          <input type="number" id="mileage" placeholder="Enter kilometers" />
+        </label>
+
+        <label>
+          Fuel Type
+          <select id="fuel">
+            <option value="petrol">Petrol</option>
+            <option value="diesel">Diesel</option>
+          </select>
+        </label>
+
+        <label>
+          Accident History
+          <select id="accident">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </label>
+
+        <div class="changes">
+          <button id="evaluateBtn" class="primary-btn">Evaluate</button>
+          <button id="resetBtn" class="secondary-btn">Reset</button>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div id="resultCard" class="demo-result hidden">
+         <img id="resultCarImage" class="result-car-img" />
+        <div id="alert" class="alert hidden"></div>
+        <div id="loader" class="loader hidden"></div>
+        <div id="output"></div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <p>© 2026 Car-Worth. Built with explainable logic.</p>
+</footer>
+
+<!-- ✅ SCRIPT MUST BE LAST -->
+<script src="script.js"></script>
+
+</body>
+</html>
