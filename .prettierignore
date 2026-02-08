@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.cache/
+*.min.js
+*.bundle.js
+coverage/
+/*.png
+/*.jpg
+/*.jpeg

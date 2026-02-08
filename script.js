@@ -1,22 +1,31 @@
+
 const ageEl = document.getElementById("age");
 const mileageEl = document.getElementById("mileage");
 const fuelEl = document.getElementById("fuel");
 const accidentEl = document.getElementById("accident");
 const brandEl = document.getElementById("brand");
 const modelEl = document.getElementById("model");
+
 const outputEl = document.getElementById("output");
 const evaluateBtn = document.getElementById("evaluateBtn");
+const resetBtn = document.getElementById("resetBtn");
+
 const resultCardEl = document.getElementById("resultCard");
 const loaderEl = document.getElementById("loader");
 const alertEl = document.getElementById("alert");
-const resetBtn = document.getElementById("resetBtn");
+
 const resultCarImageEl = document.getElementById("resultCarImage");
 
-
+// ===============================
+// PRICE CONSTANTS
+// ===============================
 const BASE_PRICE = 800000;
 const MIN_PRICE = 150000;
 const MAX_PRICE = 1200000;
 
+// ===============================
+// MODEL SEGMENTS
+// ===============================
 const MODEL_SEGMENT = {
   swift: "hatchback",
   i20: "hatchback",
@@ -24,6 +33,9 @@ const MODEL_SEGMENT = {
   creta: "suv",
 };
 
+// ===============================
+// MARKET INDEX VALUES
+// ===============================
 const BRAND_INDEX = {
   maruti: 1.08,
   hyundai: 1.05,
@@ -37,7 +49,24 @@ const SEGMENT_INDEX = {
   suv: 1.07,
 };
 
-// function-1
+const FUEL_INDEX = {
+  petrol: 1.0,
+  diesel: 1.05,
+};
+
+// ===============================
+// MODEL IMAGES
+// ===============================
+const MODEL_IMAGES = {
+  swift: "./images/swift.png",
+  i20: "./images/i10.avif",
+  nexon: "./images/nexon.avif",
+  creta: "./images/creta.avif",
+};
+
+// ===============================
+// GET FORM STATE
+// ===============================
 function getState() {
   const model = modelEl.value;
 
@@ -47,16 +76,14 @@ function getState() {
     fuel: fuelEl.value,
     accident: accidentEl.value,
     brand: brandEl.value,
+    model: model,
     segment: MODEL_SEGMENT[model],
   };
 }
 
-const FUEL_INDEX = {
-  petrol: 1.0, // baseline
-  diesel: 1.05, // longevity + resale demand
-};
-
-// rules
+// ===============================
+// RULE ENGINE
+// ===============================
 const RULES = [
   {
     name: "Age Depreciation",
@@ -75,12 +102,12 @@ const RULES = [
   },
   {
     name: "Fuel Market Adjustment",
-    reason: "Fuel type affects long-term ownership value",
+    reason: "Fuel type affects ownership value",
     apply: (s) => BASE_PRICE * (FUEL_INDEX[s.fuel] - 1),
   },
   {
     name: "Market Demand Adjustment",
-    reason: "Brand trust and segment demand affect resale",
+    reason: "Brand + Segment demand affects resale",
     apply: (s) => {
       const brandImpact = BASE_PRICE * (BRAND_INDEX[s.brand] - 1);
       const segmentImpact = BASE_PRICE * (SEGMENT_INDEX[s.segment] - 1);
@@ -89,26 +116,35 @@ const RULES = [
   },
 ];
 
+// ===============================
+// VALIDATION
+// ===============================
+function validateInputs(state) {
+  if (!state.age || state.age <= 0) {
+    return "Please enter a valid vehicle age";
+  }
 
-const MODEL_IMAGES = {
-  swift: "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
-  i20: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c",
-  nexon: "https://images.unsplash.com/photo-1549924231-f129b911e442",
-  creta: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c8"
-};
+  if (state.mileage < 0) {
+    return "Mileage cannot be negative";
+  }
 
-//function-3
+  if (!state.brand) {
+    return "Please select a brand";
+  }
 
+  if (!state.model) {
+    return "Please select a model";
+  }
 
+  return null;
+}
 
-
-
+// ===============================
+// RENDER RESULT
+// ===============================
 function render(price, breakdown) {
-  console.log("called during render");
-
   outputEl.innerHTML = `
     <h2>Estimated Price</h2>
-
     <p class="price">₹${price.toLocaleString()}</p>
 
     <h3>Decision Breakdown</h3>
@@ -116,111 +152,105 @@ function render(price, breakdown) {
       ${breakdown
         .map(
           (b) => `
-            <li>
-              <strong>${b.name}</strong>: ₹${b.impact.toLocaleString()}
-              <br/>
-              <small>${b.reason}</small>
-            </li>
-          `
+        <li>
+          <strong>${b.name}</strong>: ₹${b.impact.toLocaleString()}
+          <br/>
+          <small>${b.reason}</small>
+        </li>
+      `
         )
         .join("")}
     </ul>
   `;
 }
 
-
-
-
-
-
-
-
-
-
-  function validateInputs(state) {
-    if (!state.age || state.age <= 0) {
-      return "Please enter a valid vehicle age";
-    }
-    if (state.mileage < 0) {
-      return "Mileage cannot be negative";
-    }
-    if (!state.brand) {
-      return "Please select a brand";
-    }
-    if (!state.segment) {
-      return "Please select a model";
-    }
-    return null; // means valid
-  }
-
-  function calucationlogic() {
+// ===============================
+// MAIN CALCULATION LOGIC
+// ===============================
+function calculationLogic() {
   const state = getState();
   const error = validateInputs(state);
 
-  if (error){
-    alertEl.textContent=error
-    alertEl.classList.remove("hidden")
-    loaderEl.classList.add("hidden")
-    return
+  // ❌ Stop if invalid
+  if (error) {
+    alertEl.textContent = error;
+    alertEl.classList.remove("hidden");
+    loaderEl.classList.add("hidden");
+    return;
   }
 
   alertEl.classList.add("hidden");
 
+  // ✅ Show car image
+  const imgUrl = MODEL_IMAGES[state.model];
 
-  if (MODEL_IMAGES[state.segment] || MODEL_IMAGES[modelEl.value]) {
-    const imgUrl = MODEL_IMAGES[modelEl.value];
-    resultCarImageEl.src = imgUrl + "?auto=format&fit=crop&w=800&q=80";
+  if (imgUrl) {
+    resultCarImageEl.src = imgUrl;
     resultCarImageEl.style.display = "block";
   } else {
     resultCarImageEl.style.display = "none";
   }
 
-
+  // ✅ Calculate price
   let price = BASE_PRICE;
   const breakdown = [];
 
   RULES.forEach((rule) => {
     const impact = rule.apply(state);
+
     if (impact !== 0) {
-      breakdown.push({ name: rule.name, reason: rule.reason, impact });
+      breakdown.push({
+        name: rule.name,
+        reason: rule.reason,
+        impact,
+      });
     }
+
     price += impact;
   });
 
+  // Clamp price
   price = Math.min(MAX_PRICE, Math.max(MIN_PRICE, price));
-  console.log(price);
+
+  // Render UI
   render(price, breakdown);
+
   loaderEl.classList.add("hidden");
+
+  // ✅ Store in LocalStorage
   localStorage.setItem("vehiclePrice", price);
   localStorage.setItem("vehicleBreakdown", JSON.stringify(breakdown));
   localStorage.setItem("vehicleState", JSON.stringify(state));
+  localStorage.setItem("vehicleImage", imgUrl);
 }
-// function 2
-function evaluatePrice() {
 
-  // if (ageEl.value=""){
-  //   alert("please enter some values")
-  // }
+// ===============================
+// EVALUATE BUTTON CLICK
+// ===============================
+function evaluatePrice() {
   resultCardEl.classList.remove("hidden"); // show card
-  loaderEl.classList.remove("hidden");  // show loading symbol
-  // outputEl.innerHTML = "",
-    setTimeout(() => {
-      calucationlogic();
-    }, 800);
+  loaderEl.classList.remove("hidden"); // show loader
+  outputEl.innerHTML = "";
+
+  setTimeout(() => {
+    calculationLogic();
+  }, 800);
 }
+
 evaluateBtn.addEventListener("click", evaluatePrice);
 
-
+// ===============================
+// RESET BUTTON CLICK
+// ===============================
 function resetToInitialState() {
-  // Hide UI
   resultCardEl.classList.add("hidden");
   loaderEl.classList.add("hidden");
   alertEl.classList.add("hidden");
 
-  // Clear output
   outputEl.innerHTML = "";
+  resultCarImageEl.style.display = "none";
 
-  // Reset inputs (adjust defaults if needed)
+  // Reset inputs
   ageEl.value = "";
   mileageEl.value = "";
   fuelEl.value = "petrol";
@@ -228,26 +258,37 @@ function resetToInitialState() {
   brandEl.value = "";
   modelEl.value = "";
 
-  // Optional: clear storage
-  localStorage.removeItem("vehiclePrice");
-  localStorage.removeItem("vehicleBreakdown");
-  localStorage.removeItem("vehicleState");
+  // Clear localStorage
+  localStorage.clear();
 }
+
 resetBtn.addEventListener("click", resetToInitialState);
 
-
-
-// function 4
-function Loadfromstorage() {
-  
+// ===============================
+// PAGE LOAD (Card stays hidden)
+// ===============================
+function loadFromStorage() {
   const price = localStorage.getItem("vehiclePrice");
   const breakdown = localStorage.getItem("vehicleBreakdown");
-  // const one = JSON.parse(localStorage.getItem("vehicleState"));
-  // console.log(one);
-  resultCardEl.classList.remove("hidden"); 
-  console.log("From storage:", price, breakdown);
+  const imgUrl = localStorage.getItem("vehicleImage");
 
+  // If no saved data, do nothing
   if (!price || !breakdown) return;
+
+  // ✅ Open card automatically
+  resultCardEl.classList.remove("hidden");
+
+  // ✅ Restore image
+  if (imgUrl) {
+    resultCarImageEl.src = imgUrl;
+    resultCarImageEl.style.display = "block";
+  }
+
+  // ✅ Restore breakdown + price
   render(Number(price), JSON.parse(breakdown));
+
+  console.log("Restored evaluation from localStorage!");
 }
-Loadfromstorage();
+
+loadFromStorage();
+

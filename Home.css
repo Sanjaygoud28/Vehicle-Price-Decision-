@@ -17,45 +17,63 @@ body {
 }
 .result-car-img {
   width: 100%;
-  height: 180px;
+  height: 500px;
   object-fit: cover;
   border-radius: 12px;
   margin-bottom: 16px;
 }
 
-/* NAVBAR */
+/* NAVBAR FIX */
 .nav-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+
+  width: 100%;              /* ✅ Full width */
+  max-width: 1200px;        /* Optional: clean centered layout */
+  margin: 0 auto;           /* Center container */
+
+  padding: 20px 0;
 }
-.secondary-btn {
-   background: transparent; border: 1px solid #2563eb; color: #2563eb; padding: 12px 24px; border-radius: 10px; }
+
 .logo {
-  font-size: 22px;
-  font-weight: 700;
-  color: #2563eb;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1d4ed8;
 }
 
 .nav-links {
-  margin-left: auto;
   display: flex;
-  gap: 24px;
   align-items: center;
+  gap: 28px;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #111827;
+  font-size:20px;
   font-weight: 500;
+  color: #1f2937;
+  transition: 0.25s ease;
 }
 
-.nav-btn {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: #2563eb;
-  color: white;
+.nav-links a:hover {
+  color: #2563eb;
+  font-size:bold
 }
+
+/* Evaluate Button */
+.nav-btn {
+  background: #2563eb;
+  color: white !important;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.nav-btn:hover {
+  background: #1d4ed8;
+}
+
 
 /* HERO */
 .hero {
@@ -63,6 +81,8 @@ body {
   grid-template-columns: 1.1fr 1fr;
   gap: 60px;
   margin-top: 60px;
+  padding: 40px;
+  margin-bottom: 60px;
 }
 
 .badge {
@@ -71,6 +91,7 @@ body {
   border-radius: 20px;
   font-size: 14px;
   display: inline-block;
+
   margin-bottom: 16px;
 }
 
@@ -211,4 +232,11 @@ body {
   padding: 40px;
   text-align: center;
   background: #e5efff;
+}
+.how-text{
+padding: 20px;;
+}
+.sanju{
+  margin:10px;
+  margin-bottom:15px;
 }
